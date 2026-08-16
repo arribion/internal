@@ -25,15 +25,9 @@ const navItems = [
     icon: LayoutDashboard,
   },
   // blogs
-  { id: "blogs" as DashboardView, label: "All Blogs", icon: FileText },
-  { id: "editor" as DashboardView, label: "New Blog", icon: PlusCircle },
+  { id: "blogs" as DashboardView, label: "Blogs", icon: FileText },
   // project
   { id: "projects" as DashboardView, label: "Projects", icon: FolderOpen },
-  {
-    id: "project-editor" as DashboardView,
-    label: "New Project",
-    icon: PlusCircle,
-  },
   // contact
   {
     id: "contact" as DashboardView,
@@ -43,27 +37,25 @@ const navItems = [
   // schedule
   {
     id: "Schedule" as DashboardView,
-    label: "Pending Schedule",
+    label: "Schedule",
     icon: PlusCircle,
   },
-  {
-    id: "Schedule" as DashboardView,
-    label: "Manage Schedule",
-    icon: PlusCircle,
-  },
-
   // team
   {
     id: "Team-editor" as DashboardView,
-    label: "New Member",
+    label: "Members",
     icon: PlusCircle,
   },
-  { id: "team" as DashboardView, label: "Team", icon: FolderOpen },
   // tasks
   {
     id: "task" as DashboardView,
     label: "Task",
     icon: PlusCircle,
+  },
+  {
+    id: "settings" as DashboardView,
+    label: "Settings",
+    icon: Settings,
   },
 ];
 
@@ -76,7 +68,7 @@ export default function Sidebar({ currentView, onNavigate, collapsed, onToggle }
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-white/10">
-        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center font-bold text-white text-sm shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-sky-500 to-blue-800 flex items-center justify-center font-bold text-white text-sm shrink-0">
           A
         </div>
         {!collapsed && (
@@ -101,7 +93,7 @@ export default function Sidebar({ currentView, onNavigate, collapsed, onToggle }
               onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${
                 isActive
-                  ? "bg-linear-to-r from-violet-500/20 to-fuchsia-500/10 text-white border border-violet-500/30"
+                ? "bg-linear-to-r from-sky-500/20 to-blue-500/10 text-white border border-sky-500/30"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               }`}
             >

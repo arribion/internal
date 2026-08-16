@@ -205,7 +205,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
         parts.push(
           <blockquote
             key={i}
-            className="border-l-4 border-violet-500 pl-4 py-2 my-3 text-gray-300 italic bg-violet-500/5 rounded-r-lg"
+            className="border-l-4 border-sky-500 pl-4 py-2 my-3 text-gray-300 italic bg-sky-500/5 rounded-r-lg"
           >
             {line.slice(2)}
           </blockquote>

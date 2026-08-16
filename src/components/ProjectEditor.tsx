@@ -124,7 +124,7 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
           <button
             onClick={() => handleSave("published")}
             disabled={saving}
-            className="px-4 py-2 bg-linear-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            className="px-4 py-2 bg-linear-to-r from-sky-500 to-sky-700 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
           >
             <Upload size={16} />
             Publish
@@ -211,7 +211,7 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-violet-500/10 text-violet-300 rounded-full text-xs border border-violet-500/20"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-500/10 text-violet-300 rounded-full text-xs border border-violet-500/20"
                   >
                     {tag}
                     <button onClick={() => removeTag(tag)} className="hover:text-white">
@@ -230,7 +230,6 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
           <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-3 block">Project Thumbnail</label>
             {
-              // eslint-disable-next-line @next/next/no-img-element 
               thumbnail ? (
               <div className="relative group mb-3">
                 <img
@@ -308,7 +307,7 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
               <div
                 onClick={() => setFeatured(!featured)}
                 className={`w-10 h-5 rounded-full transition-all relative cursor-pointer ${
-                  featured ? "bg-violet-600" : "bg-white/10"
+                  featured ? "bg-sky-500" : "bg-white/10"
                 }`}
               >
                 <div
@@ -321,14 +320,14 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
           </div>
 
           {/* Preview Card */}
-          <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
+          <div className="bg-[#12181a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-3 block">Preview</label>
-            <div className="bg-[#0a0a0f] rounded-lg overflow-hidden border border-white/5">
+            <div className="bg-[#0a0e0f] rounded-lg overflow-hidden border border-white/5">
               {thumbnail ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={thumbnail} alt="" className="w-full h-28 object-cover" />
               ) : (
-                <div className="w-full h-28 bg-linear-to-br from-violet-500/10 to-fuchsia-500/10 flex items-center justify-center">
+                <div className="w-full h-28 bg-linear-to-br from-sky-500/10 to-sky-500/10 flex items-center justify-center">
                   <FolderOpen size={24} className="text-gray-700" />
                 </div>
               )}

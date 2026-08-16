@@ -50,13 +50,18 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deleted = await db.delete(portfolioProjects).where(eq(portfolioProjects.id, id)).returning();
+    const deleted = await db
+      .delete(portfolioProjects)
+      .where(eq(portfolioProjects.id, id))
+      .returning();
     if (deleted.length === 0) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
     return NextResponse.json({ message: "Project deleted" });
   } catch (error) {
     console.error("Error deleting project:", error);
-    return NextResponse.json({ error: "Failed to delete project" }, { status: 500 });
+    return NextResponse.json({
+      error: "Failed to delete project"
+    }, { status: 500 });
   }
 }

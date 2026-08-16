@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Arribion  CMS Dashboard",
+  title: "Arribion landing page CMS Dashboard",
   description: "Content management dashboard for Arribion - manage blogs, portfolio projects, and more.",
 };
 

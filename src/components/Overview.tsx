@@ -81,7 +81,7 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => onNavigate("editor")}
-          className="px-5 py-2.5 bg-linear-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+          className="px-5 py-2.5 bg-linear-to-r from-sky-700 to-sky-500 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
         >
           + New Blog Post
         </button>
@@ -99,7 +99,7 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
           <h2 className="text-xl font-semibold text-white">Recent Blog Posts</h2>
           <button
             onClick={() => onNavigate("blogs")}
-            className="text-sm text-violet-400 hover:text-violet-300 transition-colors"
+            className="text-sm text-sky-500 hover:text-white transition-colors"
           >
             View All →
           </button>
@@ -110,7 +110,7 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
             <p className="text-gray-500">No blog posts yet. Create your first one!</p>
             <button
               onClick={() => onNavigate("editor")}
-              className="mt-4 px-5 py-2 bg-violet-600 text-white rounded-lg text-sm hover:bg-violet-500 transition-colors"
+              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors"
             >
               Write a Blog
             </button>
@@ -173,7 +173,7 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
           <h2 className="text-xl font-semibold text-white">Recent Projects</h2>
           <button
             onClick={() => onNavigate("projects")}
-            className="text-sm text-violet-400 hover:text-violet-300 transition-colors"
+            className="text-sm text-sky-500 hover:text-white transition-colors"
           >
             View All →
           </button>
@@ -184,7 +184,7 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
             <p className="text-gray-500">No projects yet. Add your first portfolio project!</p>
             <button
               onClick={() => onNavigate("project-editor")}
-              className="mt-4 px-5 py-2 bg-violet-600 text-white rounded-lg text-sm hover:bg-violet-500 transition-colors"
+              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors"
             >
               Add Project
             </button>

@@ -32,8 +32,3 @@ export const portfolioProjects = pgTable("portfolio_projects", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
-
-export type Blog = typeof blogs.$inferSelect;
-export type NewBlog = typeof blogs.$inferInsert;
-export type PortfolioProject = typeof portfolioProjects.$inferSelect;
-export type NewPortfolioProject = typeof portfolioProjects.$inferInsert;

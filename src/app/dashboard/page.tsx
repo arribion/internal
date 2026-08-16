@@ -8,12 +8,8 @@ import BlogEditor from "@/components/BlogEditor";
 // projects
 import ProjectList from "@/components/ProjectList";
 import ProjectEditor from "@/components/ProjectEditor";
-// Team
-import Team from "@/components/Team";
-// contact
-import Contact from "@/components/Contact";
-// schedule
-import Schedule from "@/components/Schedule";
+
+
 
 import type { BlogPost, Project, DashboardView } from "@/types";
 
@@ -114,24 +110,6 @@ export default function DashboardPage() {
     setCurrentView("projects");
   };
 
-   const handleTeam = () => {
-    fetchTeam();
-    // setTeamId(null);
-    setCurrentView("team");
-   };
-  
-  const handleContact = () => {
-    fetchContact();
-    // setEditingContactId(null);
-    setCurrentView("contact");
-  };
-
-  const handleSchedule = () => {
-    fetchSchedule();
-    // setEditingScheduleId(null);
-    setCurrentView("schedule");
-  };
-
 
   const renderContent = () => {
     if (loading) {
@@ -189,26 +167,6 @@ export default function DashboardPage() {
             onCancel={() => handleNavigate("projects")}
           />
         );
-      case "team":
-        return (
-          <ProjectList
-            projects={team}
-            onNavigate={handleNavigate}
-            onEdit={handleTeam}
-            onDelete={() => fetchTeam()}
-            onRefresh={fetchTeam}
-          />
-        );
-      case "contact":
-        return (
-          <ProjectList
-            projects={contact}
-            onNavigate={handleNavigate}
-            onEdit={handleContact}
-            onDelete={() => fetchSchedule()}
-            onRefresh={fetchSchedule}
-          />
-        );
       default:
         return null;
     }
@@ -255,7 +213,7 @@ export default function DashboardPage() {
             >
               View Site ↗
             </a>
-            <div className="w-8 h-8 rounded-full bg-linear-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold text-white">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-sky-500 to-sky-600 flex items-center justify-center text-xs font-bold text-white">
               A
             </div>
           </div>

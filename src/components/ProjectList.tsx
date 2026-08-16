@@ -57,7 +57,7 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
         </div>
         <button
           onClick={() => onNavigate("project-editor")}
-          className="px-5 py-2.5 bg-linear-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+          className="px-5 py-2.5 bg-linear-to-r from-sky-700 to-sky-500 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
         >
           <Plus size={16} />
           New Project
@@ -83,7 +83,7 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
               onClick={() => setStatusFilter(s)}
               className={`px-4 py-2.5 rounded-lg text-sm capitalize transition-all ${
                 statusFilter === s
-                  ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                  ? "bg-sky-500/20 text-violet-300 border border-sky-500/30"
                   : "bg-white/5 text-gray-400 border border-white/10 hover:text-white"
               }`}
             >
@@ -104,7 +104,7 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
           {!search && (
             <button
               onClick={() => onNavigate("project-editor")}
-              className="mt-4 px-5 py-2 bg-violet-600 text-white rounded-lg text-sm hover:bg-violet-500 transition-colors"
+              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors"
             >
               Add Project
             </button>

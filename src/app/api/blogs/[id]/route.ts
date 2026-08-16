@@ -9,10 +9,18 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const blog = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
+    const blog = await db
+      .select()
+      .from(blogs)
+      .where(eq(blogs.id, id))
+      .limit(1);
+
     if (blog.length === 0) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      return NextResponse.json({
+        error: "Blog not found"
+      }, { status: 404 });
     }
+    
     return NextResponse.json(blog[0]);
   } catch (error) {
     console.error("Error fetching blog:", error);
