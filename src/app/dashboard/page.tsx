@@ -206,7 +206,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <a
-              href="https://arribion-0-2.vercel.app/"
+              href="https://www.arribion.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-white/5"

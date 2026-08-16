@@ -258,7 +258,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
       }
       if (part.startsWith("`") && part.endsWith("`")) {
         return (
-          <code key={i} className="bg-white/10 text-violet-300 px-1.5 py-0.5 rounded text-sm font-mono">
+          <code key={i} className="bg-white/10 text-sky-300 px-1.5 py-0.5 rounded text-sm font-mono">
             {part.slice(1, -1)}
           </code>
         );
@@ -266,7 +266,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
       const linkMatch = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
       if (linkMatch) {
         return (
-          <a key={i} href={linkMatch[2]} className="text-violet-400 underline hover:text-violet-300">
+          <a key={i} href={linkMatch[2]} className="text-sky-400 underline hover:text-sky-300">
             {linkMatch[1]}
           </a>
         );
@@ -296,7 +296,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
             onClick={() => setShowPreview(!showPreview)}
             className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all ${
               showPreview
-                ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                ? "bg-sky-500/20 text-violet-300 border border-sky-500/30"
                 : "bg-white/5 text-gray-400 border border-white/10 hover:text-white"
             }`}
           >
@@ -314,7 +314,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
           <button
             onClick={() => handleSave("published")}
             disabled={saving}
-            className="px-4 py-2 bg-linear-to-r from-violet-600 to-fuchsia-600 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            className="px-4 py-2 bg-linear-to-r from-sky-500 to-sky-700 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
           >
             <Upload size={16} />
             Publish
@@ -416,7 +416,7 @@ export default function BlogEditor({ editingBlogId, onSaved, onCancel }: BlogEdi
             <div
               onClick={() => setFeatured(!featured)}
               className={`w-10 h-5 rounded-full transition-all ${
-                featured ? "bg-violet-600" : "bg-white/10"
+                featured ? "bg-sky-500" : "bg-white/10"
               } relative`}
             >
               <div
