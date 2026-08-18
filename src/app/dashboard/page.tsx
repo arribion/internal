@@ -9,8 +9,6 @@ import BlogEditor from "@/components/BlogEditor";
 import ProjectList from "@/components/ProjectList";
 import ProjectEditor from "@/components/ProjectEditor";
 
-
-
 import type { BlogPost, Project, DashboardView } from "@/types";
 
 export default function DashboardPage() {
@@ -23,14 +21,14 @@ export default function DashboardPage() {
   const [schedule, setSchedule] = useState<Project[]>([]);
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
-   const [editingTeamId, setEditingTeamId] = useState<string | null>(null);
+  const [editingTeamId, setEditingTeamId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchBlogs = useCallback(async () => {
     try {
       const res = await fetch("/api/blogs");
       const data = await res.json();
-      setBlogs(data);
+      setBlogs(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     }
@@ -40,21 +38,21 @@ export default function DashboardPage() {
     try {
       const res = await fetch("/api/projects");
       const data = await res.json();
-      setProjects(data);
+      setProjects(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   }, []);
 
-   const fetchTeam = useCallback(async () => {
-     try {
-       const res = await fetch("/api/projects");
-       const data = await res.json();
-       setProjects(data);
-     } catch (error) {
-       console.error("Error fetching projects:", error);
-     }
-   }, []);
+  const fetchTeam = useCallback(async () => {
+    try {
+      const res = await fetch("/api/projects");
+      const data = await res.json();
+      setProjects(data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  }, []);
 
   const fetchContact = useCallback(async () => {
     try {
@@ -65,7 +63,6 @@ export default function DashboardPage() {
       console.error("Error fetching projects:", error);
     }
   }, []);
-
 
   const fetchSchedule = useCallback(async () => {
     try {
@@ -79,7 +76,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    Promise.all([fetchBlogs(), fetchProjects()]).finally(() => setLoading(false));
+    Promise.all([fetchBlogs(), fetchProjects()]).finally(() =>
+      setLoading(false),
+    );
   }, [fetchBlogs, fetchProjects]);
 
   const handleNavigate = (view: DashboardView) => {
@@ -110,7 +109,6 @@ export default function DashboardPage() {
     setCurrentView("projects");
   };
 
-
   const renderContent = () => {
     if (loading) {
       return (
@@ -124,8 +122,8 @@ export default function DashboardPage() {
       case "overview":
         return (
           <Overview
-            blogs={blogs}
-            projects={projects}
+            blogs={blogs ?? []}
+            projects={projects ?? []}
             onNavigate={handleNavigate}
             onEditBlog={handleEditBlog}
             onEditProject={handleEditProject}
@@ -197,10 +195,10 @@ export default function DashboardPage() {
                     ? "Edit Blog"
                     : "New Blog"
                   : currentView === "project-editor"
-                  ? editingProjectId
-                    ? "Edit Project"
-                    : "New Project"
-                  : currentView}
+                    ? editingProjectId
+                      ? "Edit Project"
+                      : "New Project"
+                    : currentView}
               </span>
             </h2>
           </div>

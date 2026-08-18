@@ -32,3 +32,28 @@ export const portfolioProjects = pgTable("portfolio_projects", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+/*
+"column_name","data_type","is_nullable","column_default"
+"id","integer","NO","nextval('projects_id_seq'::regclass)"
+"title","text","YES",""
+"description","text","YES",""
+"cover_image","text","YES",""
+"tags","text","YES",""
+"github_url","text","YES",""
+"live_url","text","YES",""
+"thumbnail","text","YES",""
+
+
+TABLEs
+"table_name"
+"contact"
+"newsletter"
+"admins"
+"blogs"
+"users"
+"gallery"
+"team"
+"projects"
+
+*/
