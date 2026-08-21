@@ -232,6 +232,7 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
             {
               thumbnail ? (
               <div className="relative group mb-3">
+                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={thumbnail}
                   alt="Thumbnail"
@@ -246,7 +247,8 @@ export default function ProjectEditor({ editingProjectId, onSaved, onCancel }: P
               </div>
             ) : (
               <div className="w-full h-40 bg-white/5 border-2 border-dashed border-white/10 rounded-lg flex flex-col items-center justify-center mb-3">
-                <Image size={24} className="text-gray-600 mb-2" />
+                {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                <Image size={24}  className="text-gray-600 mb-2" />
                 <p className="text-xs text-gray-600">No thumbnail</p>
               </div>
             )}

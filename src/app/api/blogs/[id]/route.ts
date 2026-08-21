@@ -1,36 +1,38 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { blogs } from "@/db/schema";
+import { blogs } from "@/db/schema/schema";
 import { eq } from "drizzle-orm";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-    const blog = await db
-      .select()
-      .from(blogs)
-      .where(eq(blogs.id, id))
-      .limit(1);
+    const blog = await db.select().from(blogs).where(eq(blogs.id, id)).limit(1);
 
     if (blog.length === 0) {
-      return NextResponse.json({
-        error: "Blog not found"
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "Blog not found",
+        },
+        { status: 404 },
+      );
     }
-    
+
     return NextResponse.json(blog[0]);
   } catch (error) {
     console.error("Error fetching blog:", error);
-    return NextResponse.json({ error: "Failed to fetch blog" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch blog" },
+      { status: 500 },
+    );
   }
 }
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -56,13 +58,16 @@ export async function PUT(
     return NextResponse.json(updated[0]);
   } catch (error) {
     console.error("Error updating blog:", error);
-    return NextResponse.json({ error: "Failed to update blog" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update blog" },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -73,6 +78,9 @@ export async function DELETE(
     return NextResponse.json({ message: "Blog deleted" });
   } catch (error) {
     console.error("Error deleting blog:", error);
-    return NextResponse.json({ error: "Failed to delete blog" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to delete blog" },
+      { status: 500 },
+    );
   }
 }

@@ -21,7 +21,13 @@ interface ProjectListProps {
   onRefresh: () => void;
 }
 
-export default function ProjectList({ projects, onNavigate, onEdit, onDelete, onRefresh }: ProjectListProps) {
+export default function ProjectList({
+  projects = [],
+  onNavigate,
+  onEdit,
+  onDelete,
+  onRefresh,
+}: ProjectListProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -31,7 +37,8 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
       project.title.toLowerCase().includes(search.toLowerCase()) ||
       project.description.toLowerCase().includes(search.toLowerCase()) ||
       project.tags?.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-    const matchesStatus = statusFilter === "all" || project.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "all" || project.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -52,7 +59,8 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
         <div>
           <h1 className="text-2xl font-bold text-white">Portfolio Projects</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            {projects.length} total · {projects.filter((p) => p.status === "published").length} published
+            {projects.length} total ·{" "}
+            {projects.filter((p) => p.status === "published").length} published
           </p>
         </div>
         <button
@@ -67,7 +75,10 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+          <Search
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+          />
           <input
             type="text"
             value={search}
@@ -97,9 +108,13 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
       {filtered.length === 0 ? (
         <div className="bg-[#12121a] border border-white/5 rounded-xl p-16 text-center">
           <FolderOpen size={48} className="text-gray-700 mx-auto mb-4" />
-          <h3 className="text-lg text-gray-400 font-medium">No projects found</h3>
+          <h3 className="text-lg text-gray-400 font-medium">
+            No projects found
+          </h3>
           <p className="text-gray-600 text-sm mt-1">
-            {search ? "Try a different search term" : "Add your first portfolio project"}
+            {search
+              ? "Try a different search term"
+              : "Add your first portfolio project"}
           </p>
           {!search && (
             <button
@@ -136,8 +151,15 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      {project.featured && <Star size={14} className="text-amber-400 fill-amber-400 shrink-0" />}
-                      <h3 className="text-white font-medium truncate">{project.title}</h3>
+                      {project.featured && (
+                        <Star
+                          size={14}
+                          className="text-amber-400 fill-amber-400 shrink-0"
+                        />
+                      )}
+                      <h3 className="text-white font-medium truncate">
+                        {project.title}
+                      </h3>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
@@ -173,7 +195,9 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-500 mt-1 line-clamp-2">{project.description}</p>
+                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                  {project.description}
+                </p>
 
                 {/* Tags */}
                 {project.tags && project.tags.length > 0 && (
@@ -187,7 +211,9 @@ export default function ProjectList({ projects, onNavigate, onEdit, onDelete, on
                       </span>
                     ))}
                     {project.tags.length > 4 && (
-                      <span className="text-[10px] text-gray-600">+{project.tags.length - 4}</span>
+                      <span className="text-[10px] text-gray-600">
+                        +{project.tags.length - 4}
+                      </span>
                     )}
                   </div>
                 )}

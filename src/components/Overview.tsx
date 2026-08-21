@@ -10,16 +10,16 @@ interface OverviewProps {
   onEditProject: (id: string) => void;
 }
 
-export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEditProject }: OverviewProps) {
-  const publishedBlogs = blogs.filter((b) => b.status === "published");
-  const draftBlogs = blogs.filter((b) => b.status === "draft");
-  const publishedProjects = projects.filter((p) => p.status === "published");
-  const featuredBlogs = blogs.filter((b) => b.featured);
+export default function Overview({ blogs=[], projects, onNavigate, onEditBlog, onEditProject }: OverviewProps) {
+  const publishedBlogs = blogs?.filter((b) => b.status === "published");
+  const draftBlogs = blogs?.filter((b) => b.status === "draft");
+  const publishedProjects = projects?.filter((p) => p.status === "published");
+  const featuredBlogs = blogs?.filter((b) => b.featured);
 
   const stats = [
     {
       label: "Total Blogs",
-      value: blogs.length,
+      value: blogs?.length,
       icon: FileText,
       color: "from-violet-500 to-purple-600",
       bg: "bg-violet-500/10",
@@ -33,14 +33,14 @@ export default function Overview({ blogs, projects, onNavigate, onEditBlog, onEd
     },
     {
       label: "Projects",
-      value: projects.length,
+      value: projects?.length,
       icon: FolderOpen,
       color: "from-amber-500 to-orange-600",
       bg: "bg-amber-500/10",
     },
     {
       label: "Featured",
-      value: featuredBlogs.length + projects.filter((p) => p.featured).length,
+      value: featuredBlogs?.length + projects?.filter((p) => p.featured).length,
       icon: Star,
       color: "from-pink-500 to-rose-600",
       bg: "bg-pink-500/10",
