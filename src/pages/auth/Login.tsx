@@ -25,8 +25,8 @@ export default function Login() {
         <div className="bg-[#12121a] border border-white/10 rounded-2xl p-8 shadow-xl">
           {/* Logo / Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-linear-to-br from-sky-500 to-blue-700 mb-4">
-              <span className="text-white font-bold text-2xl">A</span>
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white  mb-4">
+              <img src="/arribion-logo.png" alt="Logo" className="w-12 h-12" />
             </div>
             <h1 className="text-2xl font-bold text-white">Welcome back</h1>
             <p className="text-gray-500 text-sm mt-1">
@@ -121,12 +121,12 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-500">
+          {/* <div className="mt-6 text-center text-sm text-gray-500">
             Don't have an account?{" "}
             <Link to="/register" className="text-sky-500 hover:text-sky-400">
               Sign up
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
