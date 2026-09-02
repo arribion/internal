@@ -1,4 +1,3 @@
-import React from 'react'
 import {Route, Routes} from 'react-router-dom'
 import Overview from './pages/Overview'
 import DashboardLayout from './layouts/DashboardLayout'
@@ -18,7 +17,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/auth/login" element={<Login />} />
-
+        
       <Route
         path="/"
         element={
@@ -26,10 +25,11 @@ const App = () => {
             <DashboardLayout />
           </ProtectedRoute>
         }>
+        <Route path="" element={<Overview />} />
         <Route path="dashboard" element={<Overview />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="projects/new" element={<ProjectEditor />} />
-        <Route path="projects/:id" />
+        <Route path="projects/:id/edit" element={<ProjectEditor />} />
         <Route path="blogs" element={<BlogList />} />
         <Route path="blogs/new" element={<BlogEditor />} />
         <Route path="blogs/:id" />

@@ -7,7 +7,7 @@ import {
   ExternalLink,
   GitBranch,
 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import  useDeleteProject from "@/hooks/mutations/useDeleteProject";
 import { useNavigate } from "react-router-dom";
 
@@ -31,11 +31,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     <div
       key={project.id}
       className="bg-[#12121a] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all group">
-      {/* Thumbnail */}
-      {project.thumbnail ? (
-        // eslint-disable-next-line @next/next/no-img-element
+      {/* Cover image */}
+      {project.coverImage ? (
         <img
-          src={project.thumbnail}
+          src={project.coverImage}
           alt=""
           className="w-full h-40 object-cover"
         />

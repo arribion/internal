@@ -1,14 +1,10 @@
+import api from "@/config/api";
 import { BlogPost } from "@/types/blog";
 import { useQuery } from "@tanstack/react-query";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
-
 async function fetchBlogPost(id: string): Promise<BlogPost> {
-  const response = await fetch(`${API_BASE_URL}/api/blogs/${id}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch blog post: ${response.status}`);
-  }
-  return response.json();
+  const response = await api.get<BlogPost>(`/api/v1/blogs/${id}`);
+  return response.data;
 }
 
 export function useBlogPost(id: string | null) {

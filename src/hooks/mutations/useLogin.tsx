@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import api from "@/config/api";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { useReturnTo } from "../useReturnTo";
 
 interface LoginCredentials {
   email: string;
@@ -10,7 +10,7 @@ interface LoginCredentials {
 }
 
 interface LoginResponse {
-  token: string;
+  message: string;
   user: {
     id: string;
     email: string;
@@ -19,8 +19,8 @@ interface LoginResponse {
 }
 
 export function useLogin() {
-    const navigate = useNavigate();
-    const {setUser} = useAuth()
+  const rt = useReturnTo();
+  const { refreshUser } = useAuth();
 
   return useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
@@ -31,9 +31,9 @@ export function useLogin() {
       return data;
     },
     onSuccess: (data) => {
-      setUser(data.user);
-      toast.success("Login successful!");
-      navigate("/dashboard"); // adjust route as needed
+      toast.success(data?.message || "Login successful!");
+      rt.redirectToTarget(); // adjust route as needed
+      refreshUser();
     },
     onError: (error: any) => {
       const message =
