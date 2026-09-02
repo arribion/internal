@@ -3,6 +3,7 @@
     "forceConsistentCasingInFileNames": true,
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vite/client"],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
