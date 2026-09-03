@@ -10,19 +10,21 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!email || !password) {
       toast.error("Please fill in all fields");
       return;
     }
-    await loginMutation.mutateAsync({ email, password });
+
+    loginMutation.mutate({ email, password });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f] px-4">
       <div className="w-full max-w-md">
-        <div className="bg-[#12121a] border border-white/10 rounded-2xl p-8 shadow-xl">
+        <div className="bg-[#12121a] border border-white/5 rounded-2xl p-8 shadow-xl">
           {/* Logo / Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white  mb-4">
@@ -49,6 +51,7 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="username"
                   placeholder="you@example.com"
                   className="w-full bg-[#1a1a2e] border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-sky-500/50 transition-colors"
                   required
@@ -71,6 +74,7 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   className="w-full bg-[#1a1a2e] border border-white/10 rounded-lg pl-10 pr-10 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-sky-500/50 transition-colors"
                   required
                 />
