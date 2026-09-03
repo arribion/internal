@@ -1,34 +1,82 @@
 import axios from "axios";
-
-// 1. Grab the base URL from Vite's environment variables
 const baseURL = import.meta.env.VITE_API_URL;
 
-// 2. Create the custom Axios instance
 const api = axios.create({
   baseURL,
-  timeout: 10000, // 10 seconds timeout
+  timeout: 60000,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: true, // Include cookies in requests
+  withCredentials: true,
 });
 
-// 4. Optional: Add response interceptor (e.g., handle global errors)
+// ----- Refresh token state -----
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any | null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
+    }
+  });
+  failedQueue = [];
+};
+
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const originalRequest = error.config;
+
+    // Only handle 401 with TRY_REFRESH and only once per request
     if (
       error.response?.status === 401 &&
-      error.response?.data?.AUTH_CODE === "TRY_REFRESH"
+      error.response?.data?.AUTH_CODE === "TRY_REFRESH" &&
+      !originalRequest._retry
     ) {
-      // Handle unauthorized access (e.g., redirect to login)
-      console.error("Unauthorized! Refreshing...");
-      await fetch(`${baseURL}/api/v1/auth/team/refresh`, {
-        method: "POST",
-        credentials: "include",
-      });
+      if (isRefreshing) {
+        // If a refresh is already in progress, queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => {
+            // After refresh, retry the request (cookies are already updated)
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // Call refresh endpoint – cookies will be updated automatically
+        await api.post("/api/v1/auth/team/refresh", null, {
+          withCredentials: true,
+        });
+
+        // Refresh succeeded – process queue and retry original request
+        processQueue(null);
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed – clear cookies / redirect to login
+        processQueue(refreshError);
+        // Optionally: clear session and redirect
+        console.error("Refresh token failed, redirecting to login.");
+        // window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
+    // For all other errors, reject as usual
     return Promise.reject(error);
   },
 );

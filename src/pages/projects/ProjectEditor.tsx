@@ -39,26 +39,22 @@ export default function ProjectEditor() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Queries and Mutations
   const { data: projectData, isLoading: isLoadingProject } =
     useProject(editingProjectId);
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
 
-  // Populate form when editing and data arrives
   useEffect(() => {
     if (editingProjectId && projectData) {
-      (async () => {
-        setTitle(projectData.title);
-        setDescription(projectData.description);
-        setThumbnail(projectData.coverImage || "");
-        setLiveUrl(projectData.liveUrl || "");
-        setGithubUrl(projectData.githubUrl || "");
-        setCategory(projectData.category || "");
-        setTags(projectData.tags || []);
-        setStatus(projectData.status || "draft");
-        setFeatured(projectData.featured || false);
-      })();
+      setTitle(projectData.title);
+      setDescription(projectData.description);
+      setThumbnail(projectData.coverImage || "");
+      setLiveUrl(projectData.liveUrl || "");
+      setGithubUrl(projectData.githubUrl || "");
+      setCategory(projectData.category || "");
+      setTags(projectData.tags || []);
+      setStatus(projectData.status || "draft");
+      setFeatured(projectData.featured || false);
     }
   }, [editingProjectId, projectData]);
 
@@ -94,6 +90,12 @@ export default function ProjectEditor() {
       return;
     }
 
+    // ✅ Require thumbnail for new projects
+    if (!editingProjectId && !thumbnailFile) {
+      toast.error("Please upload a cover image");
+      return;
+    }
+
     setSaving(true);
     const toastId = toast.loading(
       publishStatus === "published"
@@ -107,17 +109,17 @@ export default function ProjectEditor() {
       formData.append("description", description);
       formData.append("liveUrl", liveUrl || "");
       if (githubUrl) formData.append("githubUrl", githubUrl);
-      formData.append("category", category || "");
+      // ✅ Default category to "other" if empty
+      formData.append("category", category || "other");
       formData.append("status", publishStatus);
       formData.append("featured", String(featured));
       for (const tag of tags) {
         formData.append("tags", tag);
       }
 
+      // ✅ Only append file if present (new projects already have it)
       if (thumbnailFile) {
         formData.append("coverImage", thumbnailFile);
-      } else if (thumbnail === "") {
-        formData.append("thumbnail", "");
       }
 
       if (editingProjectId) {
@@ -138,7 +140,30 @@ export default function ProjectEditor() {
       navigate("/projects");
     } catch (error) {
       console.error("Error saving project:", error);
-      toast.error("Failed to save – please try again", { id: toastId });
+      const response = (error as {
+        response?: {
+          status?: number;
+          data?: {
+            message?: string;
+            errors?: Record<string, string[]>;
+          };
+        };
+      }).response;
+      // ✅ Show the server error message if available
+      let errorMsg = "Failed to save – please try again";
+      if (response?.data?.message) {
+        errorMsg = response.data.message;
+      } else if (response?.data?.errors) {
+        const msgs = Object.values(response.data.errors).flat();
+        if (msgs.length) errorMsg = msgs.join("; ");
+      }
+      toast.error(errorMsg, { id: toastId });
+
+      // ✅ Log the full response for debugging
+      if (response) {
+        console.error("Server response status:", response.status);
+        console.error("Server response data:", response.data);
+      }
     } finally {
       setSaving(false);
     }
@@ -158,7 +183,6 @@ export default function ProjectEditor() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">
@@ -171,23 +195,20 @@ export default function ProjectEditor() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleCancel}
-            className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors"
-          >
+            className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors">
             Cancel
           </button>
           <button
             onClick={() => handleSave("draft")}
             disabled={saving}
-            className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg text-sm hover:bg-white/10 transition-all flex items-center gap-2 disabled:opacity-50"
-          >
+            className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg text-sm hover:bg-white/10 transition-all flex items-center gap-2 disabled:opacity-50">
             <Save size={16} />
             Save Draft
           </button>
           <button
             onClick={() => handleSave("published")}
             disabled={saving}
-            className="px-4 py-2 bg-linear-to-r from-sky-500 to-sky-700 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
-          >
+            className="px-4 py-2 bg-linear-to-r from-sky-500 to-sky-700 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50">
             <Upload size={16} />
             Publish
           </button>
@@ -195,9 +216,7 @@ export default function ProjectEditor() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Main Info */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Title */}
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">
               Project Title
@@ -211,7 +230,6 @@ export default function ProjectEditor() {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">
               Description
@@ -225,7 +243,6 @@ export default function ProjectEditor() {
             />
           </div>
 
-          {/* Links */}
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
@@ -253,7 +270,6 @@ export default function ProjectEditor() {
             </div>
           </div>
 
-          {/* Tags */}
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">
               Technologies / Tags
@@ -271,8 +287,7 @@ export default function ProjectEditor() {
               />
               <button
                 onClick={addTag}
-                className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
-              >
+                className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
                 <Tag size={16} />
               </button>
             </div>
@@ -281,13 +296,11 @@ export default function ProjectEditor() {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-500/10 text-violet-300 rounded-full text-xs border border-violet-500/20"
-                  >
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-500/10 text-violet-300 rounded-full text-xs border border-violet-500/20">
                     {tag}
                     <button
                       onClick={() => removeTag(tag)}
-                      className="hover:text-white"
-                    >
+                      className="hover:text-white">
                       <X size={12} />
                     </button>
                   </span>
@@ -296,12 +309,10 @@ export default function ProjectEditor() {
             )}
           </div>
 
-          {/* Thumbnail */}
           <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-3 block">
               Project Thumbnail
             </label>
-
             {thumbnail ? (
               <div className="relative group mb-3">
                 <img
@@ -311,8 +322,7 @@ export default function ProjectEditor() {
                 />
                 <button
                   onClick={removeThumbnail}
-                  className="absolute top-2 right-2 p-1.5 bg-black/60 rounded-lg text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
-                >
+                  className="absolute top-2 right-2 p-1.5 bg-black/60 rounded-lg text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-all">
                   <X size={14} />
                 </button>
               </div>
@@ -334,9 +344,7 @@ export default function ProjectEditor() {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-4">
-          {/* Category */}
           <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-2 block">
               Category
@@ -344,8 +352,7 @@ export default function ProjectEditor() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50 transition-colors appearance-none"
-            >
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50 transition-colors appearance-none">
               <option value="">Select category</option>
               <option value="web">Web Application</option>
               <option value="mobile">Mobile App</option>
@@ -357,7 +364,6 @@ export default function ProjectEditor() {
             </select>
           </div>
 
-          {/* Status */}
           <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-2 block">
               Status
@@ -373,15 +379,13 @@ export default function ProjectEditor() {
                         ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                         : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                       : "bg-white/5 text-gray-400 border border-white/10 hover:text-white"
-                  }`}
-                >
+                  }`}>
                   {s}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Featured */}
           <div className="bg-[#12121a] border border-white/10 rounded-xl p-4">
             <label className="flex items-center justify-between cursor-pointer">
               <span className="text-sm text-gray-300">Featured Project</span>
@@ -389,8 +393,7 @@ export default function ProjectEditor() {
                 onClick={() => setFeatured(!featured)}
                 className={`w-10 h-5 rounded-full transition-all relative cursor-pointer ${
                   featured ? "bg-sky-500" : "bg-white/10"
-                }`}
-              >
+                }`}>
                 <div
                   className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all ${
                     featured ? "left-5" : "left-0.5"
@@ -400,7 +403,6 @@ export default function ProjectEditor() {
             </label>
           </div>
 
-          {/* Preview Card */}
           <div className="bg-[#12181a] border border-white/10 rounded-xl p-4">
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-3 block">
               Preview
