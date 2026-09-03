@@ -35,7 +35,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const { data } = await api.post("/api/v1/auth/team/refresh");
+      const { data } = await api.post(`api/v1/auth/team/refresh`);
       setUser(data.user);
     } catch (error) {
       setUser(null);
@@ -54,8 +54,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     }
   };
   useEffect(() => {
-    getMe();
-
+    (async () => getMe())();
   }, []);
 
   const login = (userData: User) => {
@@ -65,7 +64,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post("/api/v1/auth/team/logout");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
@@ -91,7 +90,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         logout,
         refreshUser,
         setUser,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

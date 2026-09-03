@@ -5,7 +5,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
 // 2. Create the custom Axios instance
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL,
   timeout: 10000, // 10 seconds timeout
   headers: {
     "Content-Type": "application/json",
@@ -17,10 +17,17 @@ const api = axios.create({
 // 4. Optional: Add response interceptor (e.g., handle global errors)
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
+  async (error) => {
+    if (
+      error.response?.status === 401 &&
+      error.response?.data?.AUTH_CODE === "TRY_REFRESH"
+    ) {
       // Handle unauthorized access (e.g., redirect to login)
-      console.error("Unauthorized! Redirecting...");
+      console.error("Unauthorized! Refreshing...");
+      await fetch(`${baseURL}/api/v1/auth/team/refresh`, {
+        method: "POST",
+        credentials: "include",
+      });
     }
     return Promise.reject(error);
   },

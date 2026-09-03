@@ -3,6 +3,7 @@
 import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { navItems } from "@/config/navItems";
+import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -10,6 +11,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const {user, isAuthenticated} = useAuth()
   return (
     <aside
       className={`fixed left-0 top-0 h-full bg-[#0a0a0f] border-r border-white/10 z-50 transition-all duration-300 flex flex-col ${
@@ -26,7 +28,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               Arribion
             </h1>
             <p className="text-[10px] text-gray-500 uppercase tracking-widest">
-              Dashboard
+              {isAuthenticated? user?.name : "Dashboard"} 
             </p>
           </div>
         )}

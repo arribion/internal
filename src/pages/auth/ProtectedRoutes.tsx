@@ -1,21 +1,19 @@
-// src/pages/auth/ProtectedRoute.tsx
 import { useAuth } from "@/context/AuthContext";
 import { type ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import toast from "react-hot-toast"; // Make sure toast is imported
+import toast from "react-hot-toast"; 
 
 interface ProtectedRouteProps {
   children?: ReactNode;
-  redirectTo?: string; // default: "/auth/login"
-  allowedRoles?: string[]; // optional: restrict by role
+  redirectTo?: string;
+  allowedRoles?: string[];
   displayRoles?: string[];
 }
 
 export default function ProtectedRoutes({
   children,
   redirectTo = "/auth/login",
-  allowedRoles = [], // Defaulting to empty array avoids .length crashes
-  displayRoles = [],
+  allowedRoles = [],
 }: ProtectedRouteProps) {
   const { user, authStatus, isLoading } = useAuth();
   const location = useLocation();

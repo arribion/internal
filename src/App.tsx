@@ -1,5 +1,3 @@
-// src/App.tsx
-import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Overview from "./pages/Overview";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -36,7 +34,7 @@ const App = () => {
         <Route path="dashboard" element={<Overview />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="projects/new" element={<ProjectEditor />} />
-        <Route path="projects/:id" />
+        <Route path="projects/:id/edit" element={<ProjectEditor />} />
         <Route path="blogs" element={<BlogList />} />
         <Route path="blogs/new" element={<BlogEditor />} />
         <Route path="blogs/:id" />

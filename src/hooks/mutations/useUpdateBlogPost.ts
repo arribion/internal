@@ -1,6 +1,5 @@
+import api from "@/config/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 interface UpdateBlogPostArgs {
   id: string;
@@ -8,15 +7,8 @@ interface UpdateBlogPostArgs {
 }
 
 async function updateBlogPost({ id, data }: UpdateBlogPostArgs) {
-  const response = await fetch(`${API_BASE_URL}/api/blogs/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to update blog post: ${response.status}`);
-  }
-  return response.json();
+  const response = await api.put(`/api/v1/blogs/${id}`, data);
+  return response.data;
 }
 
 export function useUpdateBlogPost() {

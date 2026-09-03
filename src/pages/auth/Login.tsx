@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
