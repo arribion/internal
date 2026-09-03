@@ -5,25 +5,25 @@ import {
   Filter,
   Edit3,
   Trash2,
-  Eye,
+  // Eye,
   Star,
   Clock,
   Calendar,
   FileText,
   Plus,
 } from "lucide-react";
-import type {  DashboardView } from "@/types";
 import useBlogPosts from "@/hooks/queries/useBlogPosts";
-import { BlogPost } from "@/types/blog";
 import { Link } from "react-router-dom";
+// import type {  DashboardView } from "@/types";
+// import { BlogPost } from "@/types/blog";
 
-interface BlogListProps {
-  blogs: BlogPost[];
-  onNavigate: (view: DashboardView) => void;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  onRefresh: () => void;
-}
+// interface BlogListProps {
+//   blogs: BlogPost[];
+//   onNavigate: (view: DashboardView) => void;
+//   onEdit: (id: string) => void;
+//   onDelete: (id: string) => void;
+//   onRefresh: () => void;
+// }
 
 export default function BlogList() {
   const [search, setSearch] = useState("");

@@ -17,10 +17,11 @@ export default function Overview() {
   const { data: projects = [] } = usePortfolioProjects();
 
   const publishedBlogs = blogs.filter((b) => b.status === "published");
-  const draftBlogs = blogs.filter(
-    (b: (typeof blogs)[number]) => b.status === "draft",
-  );
-  const publishedProjects = projects.filter((p) => p.status === "published");
+  // const draftBlogs = blogs.filter(
+  //   (b: (typeof blogs)[number]) => b.status === "draft",
+  // );
+  
+  // const publishedProjects = projects.filter((p) => p.status === "published");
   const featuredBlogs = blogs.filter((b: (typeof blogs)[number]) => b.featured);
 
   const stats = [

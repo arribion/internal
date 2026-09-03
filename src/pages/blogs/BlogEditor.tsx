@@ -39,7 +39,7 @@ export default function BlogEditor() {
   const [category, setCategory] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [status, setStatus] = useState("draft");
+  const [_status, setStatus] = useState("draft");
   const [featured, setFeatured] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [saving, setSaving] = useState(false);

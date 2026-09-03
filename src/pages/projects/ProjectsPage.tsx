@@ -1,8 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Search, Plus, FolderOpen } from "lucide-react";
+import {
+  Search, Plus,
+  // FolderOpen
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 import ProjectList from "./ProjectList";
 import usePortfolioProjects from "@/hooks/queries/usePortfolioProjects";
 
@@ -12,7 +15,7 @@ export default function ProjectPage() {
   const { data: projects = [], refetch: refetchPortfolioProjects } = usePortfolioProjects();
 
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const filtered = projects.filter((project) => {
     const matchesSearch =

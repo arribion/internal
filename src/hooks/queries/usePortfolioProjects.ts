@@ -1,7 +1,6 @@
 import api from "@/config/api";
 import { PortfolioProject } from "@/types/portfolio-project";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 
 export default function usePortfolioProjects() {
   return useQuery({

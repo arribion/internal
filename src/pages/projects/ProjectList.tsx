@@ -1,15 +1,15 @@
 "use client";
 import { useState } from "react";
 import {
-  Search,
-  Edit3,
-  Trash2,
-  ExternalLink,
-  GitBranch,
-  Star,
-  Plus,
+  // Search,
+  // Edit3,
+  // Trash2,
+  // ExternalLink,
+  // GitBranch,
+  // Star,
+  // Plus,
+  // Globe,
   FolderOpen,
-  Globe,
 } from "lucide-react";
 import type { DashboardView } from "@/types";
 import ProjectCard from "./ProjectCard";
@@ -23,11 +23,11 @@ interface ProjectListProps {
 
 export default function ProjectList({
   projects = [],
-  onNavigate,
-  onRefresh,
+  // onNavigate,
+  // onRefresh,
 }: ProjectListProps) {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [search, _setSearch] = useState("");
+  const [statusFilter, _setStatusFilter] = useState<string>("all");
 
   const filtered = projects.filter((project) => {
     const matchesSearch =
