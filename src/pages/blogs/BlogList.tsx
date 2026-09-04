@@ -102,13 +102,13 @@ export default function BlogList() {
         <div className="bg-[#12121a] border border-white/5 rounded-xl p-16 text-center">
           <FileText size={48} className="text-gray-700 mx-auto mb-4" />
           <h3 className="text-lg text-gray-400 font-medium">No blog posts found</h3>
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="text-gray-600 text-sm mt-1 mb-4">
             {search ? "Try a different search term" : "Create your first blog post to get started"}
           </p>
           {!search && (
             <Link
               to="/blogs/new"
-              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors"
+              className="mt-4 px-5 my-4 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors"
             >
               Write a Blog
             </Link>

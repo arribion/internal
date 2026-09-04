@@ -121,7 +121,7 @@ export default function Overview() {
             </p>
             <Link
               to="/blogs/new"
-              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors">
+              className="mt-4 px-5 py-2 my-4 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors">
               Write a Blog
             </Link>
           </div>
@@ -194,7 +194,7 @@ export default function Overview() {
             </p>
             <Link
               to="/projects/new"
-              className="mt-4 px-5 py-2 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors">
+              className="mt-4 px-5 py-4 bg-sky-500 text-white rounded-lg text-sm hover:bg-sky-600 transition-colors">
               Add Project
             </Link>
           </div>

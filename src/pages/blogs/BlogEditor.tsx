@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Save,
   Eye,
@@ -10,13 +10,16 @@ import {
   Heading2,
   List,
   ListOrdered,
-  Link,
-  Image,
+  Link as LinkIcon,
+  Image as ImageIcon,
   Quote,
   ChevronDown,
   Tag,
   X,
   Upload,
+  User,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -33,6 +36,7 @@ export default function BlogEditor() {
   const editingBlogId = id && id !== "new" ? id : null;
 
   const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState("");
@@ -42,9 +46,14 @@ export default function BlogEditor() {
   const [_status, setStatus] = useState("draft");
   const [featured, setFeatured] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [expandPreview, setExpandPreview] = useState(false); // Expanded Preview Modal state
   const [saving, setSaving] = useState(false);
   const [codeLang, setCodeLang] = useState("javascript");
   const [showLangDropdown, setShowLangDropdown] = useState(false);
+
+  // Hidden file input refs for local image selection
+  const coverFileInputRef = useRef<HTMLInputElement | null>(null);
+  const inlineFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const languages = [
     "javascript",
@@ -80,6 +89,7 @@ export default function BlogEditor() {
   useEffect(() => {
     if (editingBlogId && blogData) {
       setTitle(blogData.title);
+      setAuthor(blogData.author || "");
       setExcerpt(blogData.excerpt || "");
       setContent(blogData.content);
       setCoverImage(blogData.coverImage || "");
@@ -89,6 +99,46 @@ export default function BlogEditor() {
       setFeatured(blogData.featured || false);
     }
   }, [editingBlogId, blogData]);
+
+  // Handle local preview selection for Cover Image without server upload
+  const handleLocalCoverPreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const localObjectUrl = URL.createObjectURL(file);
+    setCoverImage(localObjectUrl);
+    toast.success("Cover image added to preview");
+
+    if (coverFileInputRef.current) coverFileInputRef.current.value = "";
+  };
+
+  // Handle local preview insertion for Inline Body Image without server upload
+  const handleLocalInlineImagePreview = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const localObjectUrl = URL.createObjectURL(file);
+    const markdownImg = `\n![${file.name.split(".")[0]}](${localObjectUrl})\n`;
+
+    const textarea = document.getElementById(
+      "blog-content",
+    ) as HTMLTextAreaElement;
+
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const newContent =
+        content.substring(0, start) + markdownImg + content.substring(end);
+      setContent(newContent);
+    } else {
+      setContent((prev) => prev + markdownImg);
+    }
+
+    toast.success("Inline image added to markdown preview");
+    if (inlineFileInputRef.current) inlineFileInputRef.current.value = "";
+  };
 
   const insertMarkdown = useCallback(
     (prefix: string, suffix: string = "", placeholder: string = "") => {
@@ -160,6 +210,7 @@ export default function BlogEditor() {
     try {
       const body = {
         title,
+        author: author || null,
         excerpt,
         content,
         coverImage: coverImage || null,
@@ -197,9 +248,35 @@ export default function BlogEditor() {
   // Markdown preview rendering functions
   const renderInlineMarkdown = (text: string): React.ReactNode => {
     const parts = text.split(
-      /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g,
+      /(!?\[[^\]]*\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g,
     );
     return parts.map((part, i) => {
+      const imageMatch = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+      if (imageMatch) {
+        return (
+          <img
+            key={i}
+            src={imageMatch[2]}
+            alt={imageMatch[1] || "Blog Image"}
+            className="my-4 rounded-lg max-h-96 w-full object-cover border border-white/10"
+          />
+        );
+      }
+
+      const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (linkMatch) {
+        return (
+          <a
+            key={i}
+            href={linkMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 underline hover:text-sky-300">
+            {linkMatch[1]}
+          </a>
+        );
+      }
+
       if (part.startsWith("**") && part.endsWith("**")) {
         return (
           <strong key={i} className="font-bold text-white">
@@ -221,17 +298,6 @@ export default function BlogEditor() {
             className="bg-white/10 text-sky-300 px-1.5 py-0.5 rounded text-sm font-mono">
             {part.slice(1, -1)}
           </code>
-        );
-      }
-      const linkMatch = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
-      if (linkMatch) {
-        return (
-          <a
-            key={i}
-            href={linkMatch[2]}
-            className="text-sky-400 underline hover:text-sky-300">
-            {linkMatch[1]}
-          </a>
         );
       }
       return <span key={i}>{part}</span>;
@@ -338,6 +404,45 @@ export default function BlogEditor() {
     return parts;
   };
 
+  // Reusable Preview Body Component
+  const BlogPreviewContent = () => (
+    <div className="max-w-4xl mx-auto">
+      {coverImage && (
+        <img
+          src={coverImage}
+          alt="Cover"
+          className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl mb-6 border border-white/10"
+        />
+      )}
+      <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 leading-tight">
+        {title || "Untitled Post"}
+      </h1>
+      {author && (
+        <p className="text-sky-400 font-medium text-base mb-4">By {author}</p>
+      )}
+      {excerpt && (
+        <p className="text-lg text-gray-300 mb-6 italic leading-relaxed">
+          {excerpt}
+        </p>
+      )}
+      <div className="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-white/10">
+        {category && (
+          <span className="text-xs px-3 py-1 bg-violet-500/10 text-violet-300 font-medium rounded-full border border-violet-500/20">
+            {category}
+          </span>
+        )}
+        {tags.map((tag) => (
+          <span key={tag} className="text-xs text-gray-400">
+            #{tag}
+          </span>
+        ))}
+      </div>
+      <div className="prose prose-invert max-w-none text-base md:text-lg">
+        {renderPreview(content)}
+      </div>
+    </div>
+  );
+
   if (isLoadingBlog && editingBlogId) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -348,6 +453,22 @@ export default function BlogEditor() {
 
   return (
     <div className="space-y-6">
+      {/* Hidden file inputs */}
+      <input
+        type="file"
+        ref={coverFileInputRef}
+        onChange={handleLocalCoverPreview}
+        accept="image/*"
+        className="hidden"
+      />
+      <input
+        type="file"
+        ref={inlineFileInputRef}
+        onChange={handleLocalInlineImagePreview}
+        accept="image/*"
+        className="hidden"
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -360,21 +481,27 @@ export default function BlogEditor() {
         </div>
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={handleCancel}
             className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors">
             Cancel
           </button>
           <button
-            onClick={() => setShowPreview(!showPreview)}
+            type="button"
+            onClick={() => {
+              setShowPreview(!showPreview);
+              if (showPreview) setExpandPreview(false);
+            }}
             className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all ${
               showPreview
                 ? "bg-sky-500/20 text-violet-300 border border-sky-500/30"
                 : "bg-white/5 text-gray-400 border border-white/10 hover:text-white"
             }`}>
             <Eye size={16} />
-            {showPreview ? "Editor" : "Preview"}
+            {showPreview ? "Hide Preview" : "Side Preview"}
           </button>
           <button
+            type="button"
             onClick={() => handleSave("draft")}
             disabled={saving}
             className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg text-sm hover:bg-white/10 transition-all flex items-center gap-2 disabled:opacity-50">
@@ -382,6 +509,7 @@ export default function BlogEditor() {
             Save Draft
           </button>
           <button
+            type="button"
             onClick={() => handleSave("published")}
             disabled={saving}
             className="px-4 py-2 bg-linear-to-r from-sky-500 to-sky-700 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50">
@@ -392,7 +520,9 @@ export default function BlogEditor() {
       </div>
 
       <div
-        className={`grid gap-6 ${showPreview ? "lg:grid-cols-2" : "grid-cols-1"}`}>
+        className={`grid gap-6 ${
+          showPreview && !expandPreview ? "lg:grid-cols-2" : "grid-cols-1"
+        }`}>
         {/* Editor Panel */}
         <div className="space-y-4">
           <input
@@ -402,6 +532,27 @@ export default function BlogEditor() {
             placeholder="Blog post title..."
             className="w-full bg-[#12121a] border border-white/10 rounded-xl px-5 py-4 text-xl text-white placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors"
           />
+
+          {/* Author Field */}
+          <div>
+            <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">
+              Author
+            </label>
+            <div className="relative">
+              <User
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+              />
+              <input
+                type="text"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+                placeholder="Author name..."
+                className="w-full bg-[#12121a] border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors"
+              />
+            </div>
+          </div>
+
           <textarea
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
@@ -409,18 +560,27 @@ export default function BlogEditor() {
             rows={2}
             className="w-full bg-[#12121a] border border-white/10 rounded-xl px-5 py-3 text-sm text-gray-300 placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors resize-none"
           />
+
+          {/* Cover Image Controls */}
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">
-              Cover Image URL
+              Cover Image URL or Pick Local File
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={coverImage}
                 onChange={(e) => setCoverImage(e.target.value)}
-                placeholder="https://example.com/image.jpg"
+                placeholder="https://example.com/image.jpg or blob:..."
                 className="flex-1 bg-[#12121a] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors"
               />
+              <button
+                type="button"
+                onClick={() => coverFileInputRef.current?.click()}
+                className="px-4 py-2 bg-white/5 border border-white/10 text-gray-300 rounded-lg text-sm hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                <ImageIcon size={16} />
+                <span className="hidden sm:inline">Select Image</span>
+              </button>
               {coverImage && (
                 <img
                   src={coverImage}
@@ -460,6 +620,7 @@ export default function BlogEditor() {
                   className="flex-1 bg-[#12121a] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-violet-500/50 transition-colors"
                 />
                 <button
+                  type="button"
                   onClick={addTag}
                   className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
                   <Tag size={16} />
@@ -476,6 +637,7 @@ export default function BlogEditor() {
                   className="inline-flex items-center gap-1 px-2.5 py-1 bg-violet-500/10 text-violet-300 rounded-full text-xs border border-violet-500/20">
                   {tag}
                   <button
+                    type="button"
                     onClick={() => removeTag(tag)}
                     className="hover:text-white">
                     <X size={12} />
@@ -539,20 +701,21 @@ export default function BlogEditor() {
             />
             <div className="w-px h-6 bg-white/10 mx-1" />
             <ToolbarBtn
-              icon={Link}
+              icon={LinkIcon}
               onClick={() => insertMarkdown("[", "](url)", "link text")}
               title="Link"
             />
             <ToolbarBtn
-              icon={Image}
-              onClick={() => insertMarkdown("![", "](url)", "alt text")}
-              title="Image"
+              icon={ImageIcon}
+              onClick={() => inlineFileInputRef.current?.click()}
+              title="Add Local Image to Preview"
             />
             <div className="w-px h-6 bg-white/10 mx-1" />
 
             {/* Code block with language selector */}
             <div className="relative">
               <button
+                type="button"
                 onClick={insertCodeBlock}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all text-xs"
                 title="Code Block">
@@ -571,6 +734,7 @@ export default function BlogEditor() {
                   {languages.map((lang) => (
                     <button
                       key={lang}
+                      type="button"
                       onClick={() => {
                         setCodeLang(lang);
                         setShowLangDropdown(false);
@@ -597,38 +761,62 @@ export default function BlogEditor() {
           />
         </div>
 
-        {/* Preview Panel */}
-        {showPreview && (
-          <div className="bg-[#12121a] border border-white/10 rounded-xl p-6 overflow-y-auto max-h-[80vh]">
-            {coverImage && (
-              <img
-                src={coverImage}
-                alt="Cover"
-                className="w-full h-48 object-cover rounded-lg mb-6"
-              />
-            )}
-            <h1 className="text-3xl font-bold text-white mb-2">
-              {title || "Untitled Post"}
-            </h1>
-            {excerpt && <p className="text-gray-400 mb-4 italic">{excerpt}</p>}
-            <div className="flex items-center gap-3 mb-6 pb-6 border-b border-white/10">
-              {category && (
-                <span className="text-xs px-2.5 py-1 bg-violet-500/10 text-violet-300 rounded-full">
-                  {category}
-                </span>
-              )}
-              {tags.map((tag) => (
-                <span key={tag} className="text-xs text-gray-500">
-                  #{tag}
-                </span>
-              ))}
+        {/* Side Preview Panel */}
+        {showPreview && !expandPreview && (
+          <div className="bg-[#12121a] border border-white/10 rounded-xl p-6 overflow-y-auto max-h-[80vh] relative">
+            {/* Header Control with Expand Button */}
+            <div className="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+              <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">
+                Side Preview
+              </span>
+              <button
+                type="button"
+                onClick={() => setExpandPreview(true)}
+                className="flex items-center gap-1.5 text-xs bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white px-2.5 py-1.5 rounded-lg transition-all"
+                title="Expand to Full Desktop View">
+                <Maximize2 size={14} />
+                <span>Full Desktop Screen</span>
+              </button>
             </div>
-            <div className="prose prose-invert max-w-none">
-              {renderPreview(content)}
-            </div>
+            <BlogPreviewContent />
           </div>
         )}
       </div>
+
+      {/* Full Desktop Screen Modal Preview */}
+      {showPreview && expandPreview && (
+        <div className="fixed inset-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md flex flex-col p-4 md:p-8 overflow-hidden">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="text-sm uppercase tracking-wider text-sky-400 font-semibold">
+                Desktop View Preview
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setExpandPreview(false)}
+                className="flex items-center gap-1.5 text-xs bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-all">
+                <Minimize2 size={14} />
+                <span>Minimize to Side View</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setExpandPreview(false);
+                  setShowPreview(false);
+                }}
+                className="p-2 bg-white/5 border border-white/10 text-gray-400 hover:text-white rounded-lg transition-all"
+                title="Close Preview">
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2">
+            <BlogPreviewContent />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -644,6 +832,7 @@ function ToolbarBtn({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       title={title}
       className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">
