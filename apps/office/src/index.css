@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+    color-scheme: light dark;
+}
+
+@theme {
+    --font-sans: "Avenir Next", "Plus Jakarta Sans", sans-serif;
+    --font-display: "Avenir Next", "Plus Jakarta Sans", sans-serif;
+    --color-bg: light-dark(#f5f7fa, #0d131b);
+    --color-surface: light-dark(#ffffff, #141c25);
+    --color-surface-raised: light-dark(#ffffff, #1a2530);
+    --color-bg-muted: light-dark(#eaf0f5, #202c38);
+    --color-border: light-dark(#d7e0e8, #2a3947);
+    --color-text: light-dark(#17212b, #edf3f7);
+    --color-text-muted: light-dark(#526273, #a8b6c4);
+    --color-text-subtle: light-dark(#718092, #748596);
+    --color-primary: light-dark(#137c9b, #4fc0dc);
+    --color-success: light-dark(#16805b, #46c995);
+    --color-warning: light-dark(#a96912, #f4bd61);
+    --color-danger: light-dark(#b33a4b, #f08391);
+    --color-info: light-dark(#3c69ae, #8fb7f1);
+    --spacing: 0.25rem;
+    --breakpoint-sm: 40rem;
+    --breakpoint-md: 48rem;
+    --breakpoint-lg: 64rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --shadow-card: 0 12px 32px light-dark(rgb(23 33 43 / 0.08), rgb(0 0 0 / 0.2));
+    --animate-fade-in: fade-in 300ms ease-out both;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@layer base {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-border) transparent;
+    }
+
+    *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+        border-radius: 999px;
+    }
+
+    body {
+        min-width: 320px;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-sans);
+    }
+
+    button,
+    a,
+    input,
+    select {
+        font: inherit;
+    }
+
+    select option {
+        background: var(--color-surface);
+        color: var(--color-text);
+    }
+}

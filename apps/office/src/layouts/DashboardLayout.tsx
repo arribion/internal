@@ -6,7 +6,7 @@ const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-bg text-text">
       <Sidebar
         collapsed={collapsed}
         onToggle={() => setCollapsed((prev) => !prev)}
@@ -14,7 +14,8 @@ const DashboardLayout = () => {
       <main
         className={`${
           collapsed ? "ml-16" : "ml-60"
-        } transition-all duration-300 p-6`}>
+        } min-h-screen transition-all duration-300 px-4 py-6 sm:px-6 lg:px-8`}
+      >
         <Outlet />
       </main>
     </div>

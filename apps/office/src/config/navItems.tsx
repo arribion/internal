@@ -1,54 +1,12 @@
-import { DashboardView } from "@/types";
-import { LayoutDashboard, FileText, FolderOpen, PlusCircle, Settings } from "lucide-react";
+import { CalendarClock, ClipboardCheck, UserRound } from "lucide-react";
 
 export const navItems = [
+  { id: "tasks", path: "/tasks", label: "Tasks", icon: ClipboardCheck },
   {
-    id: "overview" as DashboardView,
-    path: "/dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboard,
+    id: "call-bookings",
+    path: "/call-bookings",
+    label: "Call Requests",
+    icon: CalendarClock,
   },
-  // blogs
-  { id: "blogs" as DashboardView, path: "/blogs", label: "Blogs", icon: FileText },
-  // project
-  {
-    id: "projects" as DashboardView,
-    path: "/projects",
-    label: "Projects",
-    icon: FolderOpen,
-  },
-  // contact
-  {
-    id: "contact" as DashboardView,
-    path: "/contact",
-    label: "Contact",
-    icon: PlusCircle,
-  },
-  // schedule
-  {
-    id: "Schedule" as DashboardView,
-    path: "/schedule",
-    label: "Schedule",
-    icon: PlusCircle,
-  },
-  // team
-  {
-    id: "Team-editor" as DashboardView,
-    path: "/team",
-    label: "Members",
-    icon: PlusCircle,
-  },
-  // tasks
-  {
-    id: "task" as DashboardView,
-    path: "/tasks",
-    label: "Task",
-    icon: PlusCircle,
-  },
-  {
-    id: "settings" as DashboardView,
-    path: "/settings",
-    label: "Settings",
-    icon: Settings,
-  },
+  { id: "profile", path: "/profile", label: "Profile", icon: UserRound },
 ];

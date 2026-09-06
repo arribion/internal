@@ -14,10 +14,10 @@ const api = axios.create({
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value?: unknown) => void;
-  reject: (reason?: any) => void;
+  reject: (reason?: unknown) => void;
 }> = [];
 
-const processQueue = (error: any | null) => {
+const processQueue = (error: unknown) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);

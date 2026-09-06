@@ -3,6 +3,7 @@ import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useLogin } from "@/hooks/mutations/useLogin";
+import type { AxiosError } from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export default function Login() {
             </div>
             <h1 className="text-2xl font-bold text-white">Welcome back</h1>
             <p className="text-gray-500 text-sm mt-1">
-              Sign in to your dashboard
+              Sign in to your employee workspace
             </p>
           </div>
 
@@ -81,7 +82,8 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -98,7 +100,8 @@ export default function Login() {
               </label>
               <Link
                 to="/forgot-password"
-                className="text-sky-500 hover:text-sky-400">
+                className="text-sky-500 hover:text-sky-400"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -106,8 +109,9 @@ export default function Login() {
             {/* Inline error */}
             {loginMutation.isError && (
               <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">
-                {loginMutation.error?.response?.data?.message ||
-                  "Invalid email or password"}
+                {(
+                  loginMutation.error as AxiosError<{ message?: string }> | null
+                )?.response?.data?.message || "Invalid email or password"}
               </div>
             )}
 
@@ -115,7 +119,8 @@ export default function Login() {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full px-4 py-3 bg-linear-to-r from-sky-600 to-sky-500 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2">
+              className="w-full px-4 py-3 bg-linear-to-r from-sky-600 to-sky-500 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+            >
               {loginMutation.isPending ? (
                 <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (

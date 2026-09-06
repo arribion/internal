@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@arribion/shared": "workspace:*",
     "@tanstack/react-query": "^5.102.8",
     "@tanstack/react-query-devtools": "^5.102.8",
     "@types/react-syntax-highlighter": "^15.5.13",

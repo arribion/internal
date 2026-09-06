@@ -12,6 +12,7 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  role?: string;
 }
 
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
@@ -37,7 +38,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await api.post(`api/v1/auth/team/refresh`);
       setUser(data.user);
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -47,7 +48,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await api.post("/api/v1/auth/team/me");
       setUser(data.me);
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setIsLoading(false);

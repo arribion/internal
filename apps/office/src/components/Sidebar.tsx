@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { navItems } from "@/config/navItems";
 import { useAuth } from "@/context/AuthContext";
@@ -11,34 +11,35 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
-  const {user, isAuthenticated} = useAuth()
+  const { user, logout } = useAuth();
   return (
     <aside
-      className={`fixed left-0 top-0 h-full bg-[#0a0a0f] border-r border-white/10 z-50 transition-all duration-300 flex flex-col ${
+      className={`fixed left-0 top-0 z-50 flex h-full flex-col border-r border-border bg-surface transition-all duration-300 ${
         collapsed ? "w-16" : "w-64"
-      }`}>
+      }`}
+    >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-16 border-b border-white/10">
-        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-sky-500 to-blue-800 flex items-center justify-center font-bold text-white text-sm shrink-0">
+      <div className="flex h-16 items-center gap-3 border-b border-border px-4">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-bold text-white">
           A
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <h1 className="text-white font-bold text-lg leading-tight">
+            <h1 className="text-lg font-bold leading-tight text-text">
               Arribion
             </h1>
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest">
-              {isAuthenticated? user?.name : "Dashboard"} 
+            <p className="text-[10px] uppercase tracking-widest text-text-subtle">
+              {user?.name ?? "Office"}
             </p>
           </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 space-y-1 px-2 overflow-y-auto">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">
         {!collapsed && (
-          <p className="text-[10px] text-gray-600 uppercase tracking-widest px-3 mb-2">
-            Content
+          <p className="mb-2 px-3 text-[10px] uppercase tracking-widest text-text-subtle">
+            Workspace
           </p>
         )}
         {navItems.map((item) => {
@@ -49,20 +50,21 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               key={item.id}
               to={item.path}
               className={({ isActive }) =>
-                `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group ${
+                `group flex w-full items-center gap-3 rounded-md border px-3 py-2.5 text-sm transition-all duration-200 ${
                   isActive
-                    ? "bg-linear-to-r from-sky-500/20 to-blue-500/10 text-white border border-sky-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "border-primary/30 bg-primary/10 text-text"
+                    : "border-transparent text-text-muted hover:bg-bg-muted hover:text-text"
                 }`
-              }>
+              }
+            >
               {({ isActive }) => (
                 <>
                   <Icon
                     size={18}
                     className={`shrink-0 ${
                       isActive
-                        ? "text-violet-400"
-                        : "text-gray-500 group-hover:text-gray-300"
+                        ? "text-primary"
+                        : "text-text-subtle group-hover:text-text-muted"
                     }`}
                   />
                   {!collapsed && <span>{item.label}</span>}
@@ -73,22 +75,21 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         })}
       </nav>
 
-      {/* External link */}
       <div className="px-2 pb-2">
-        <a
-          href="https://arribion-0-2.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-          <ExternalLink size={18} className="shrink-0 text-gray-500" />
-          {!collapsed && <span>View Site</span>}
-        </a>
+        <button
+          onClick={() => void logout()}
+          className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted transition-colors hover:bg-bg-muted hover:text-text"
+        >
+          <LogOut size={18} className="shrink-0" />
+          {!collapsed && <span>Sign out</span>}
+        </button>
       </div>
 
       {/* Collapse toggle */}
       <button
         onClick={onToggle}
-        className="flex items-center justify-center h-12 border-t border-white/10 text-gray-500 hover:text-white transition-colors">
+        className="flex h-12 items-center justify-center border-t border-border text-text-subtle transition-colors hover:text-text"
+      >
         {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
       </button>
     </aside>

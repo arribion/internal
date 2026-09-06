@@ -1,7 +1,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { type ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 
 interface ProtectedRouteProps {
   children?: ReactNode;
@@ -42,7 +42,7 @@ export default function ProtectedRoutes({
   // 4. Role Authorization Check: Run ONLY after verifying the user exists
   if (allowedRoles.length > 0) {
     // Modify 'user?.role' to match whatever property name your database uses (e.g., user?.role, user?.type)
-    const hasRole = allowedRoles.includes((user as any)?.role || "");
+    const hasRole = allowedRoles.includes(user.role || "");
 
     if (!hasRole) {
       toast.error("You do not have permission to view this page");
