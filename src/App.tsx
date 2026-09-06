@@ -9,9 +9,10 @@ import BlogEditor from "./pages/blogs/BlogEditor";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
-import Team from "./pages/Team";
+import Team from "./pages/team/Team";
 import Login from "./pages/auth/Login";
 import ProtectedRoutes from "./pages/auth/ProtectedRoutes";
+import NewsLetters from "./pages/NewsLetters";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="team" element={<Team />} />
         <Route path="tasks" element={<Tasks />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="newsletter" element={<NewsLetters />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 

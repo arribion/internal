@@ -1,6 +1,15 @@
 import { DashboardView } from "@/types";
-import { LayoutDashboard, FileText, FolderOpen, PlusCircle, Settings } from "lucide-react";
-
+import {
+  LayoutDashboard,
+  FileText,
+  FolderOpen,
+  Settings,
+  Mail,
+} from "lucide-react";
+import { MdOutlineMessage } from "react-icons/md";
+import { GoPeople } from "react-icons/go";
+import { LuClipboardCheck } from "react-icons/lu";
+import { SiGooglemeet } from "react-icons/si";
 export const navItems = [
   {
     id: "overview" as DashboardView,
@@ -9,7 +18,12 @@ export const navItems = [
     icon: LayoutDashboard,
   },
   // blogs
-  { id: "blogs" as DashboardView, path: "/blogs", label: "Blogs", icon: FileText },
+  {
+    id: "blogs" as DashboardView,
+    path: "/blogs",
+    label: "Blogs",
+    icon: FileText,
+  },
   // project
   {
     id: "projects" as DashboardView,
@@ -22,28 +36,34 @@ export const navItems = [
     id: "contact" as DashboardView,
     path: "/contact",
     label: "Contact",
-    icon: PlusCircle,
+    icon: MdOutlineMessage,
   },
   // schedule
   {
     id: "Schedule" as DashboardView,
     path: "/schedule",
     label: "Schedule",
-    icon: PlusCircle,
+    icon: SiGooglemeet,
   },
   // team
   {
     id: "Team-editor" as DashboardView,
     path: "/team",
     label: "Members",
-    icon: PlusCircle,
+    icon: GoPeople,
   },
   // tasks
   {
     id: "task" as DashboardView,
     path: "/tasks",
     label: "Task",
-    icon: PlusCircle,
+    icon: LuClipboardCheck,
+  },
+  {
+    id: "newsletter" as DashboardView,
+    path: "/newsletter",
+    label: "NewLetter",
+    icon: Mail,
   },
   {
     id: "settings" as DashboardView,
